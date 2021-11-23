@@ -1,10 +1,12 @@
 import "./styles";
 import { Button } from "./styles";
 
-export const Btn = ({ placeholder, clickFunction }) => {
+export const Btn = ({ placeholder, clickFunction, type }) => {
   return (
     <>
-      <Button onClick={clickFunction}>{placeholder}</Button>
+      <Button onClick={clickFunction} type={type}>
+        {placeholder}
+      </Button>
     </>
   );
 };
