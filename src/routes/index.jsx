@@ -1,20 +1,22 @@
+import { useState } from "react";
 import { Route, Switch } from "react-router";
 import { Home } from "../pages/Home";
 import { SignUp } from "../pages/SignUp";
 import { UserHome } from "../pages/UserHome";
 
 export const Routes = () => {
+  const [userData, setUserData] = useState([]);
   return (
     <>
       <Switch>
         <Route exact path="/">
-          <Home />
+          <Home userData={userData} setUserData={setUserData} />
         </Route>
-        <Route path="/sign">
+        <Route path="/signup">
           <SignUp />
         </Route>
         <Route path="/userhome">
-          <UserHome />
+          <UserHome userData={userData} />
         </Route>
       </Switch>
     </>

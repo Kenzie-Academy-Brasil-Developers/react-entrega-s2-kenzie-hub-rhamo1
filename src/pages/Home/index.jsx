@@ -1,20 +1,58 @@
-import { motion } from "framer-motion";
-import { Btn } from "../../components/Button";
-import { Input } from "../../components/Input";
 import "./styles.css";
-import { useHistory } from "react-router-dom";
-import { useState } from "react";
 
-export const Home = () => {
+import { Input } from "../../components/Input";
+import { Btn } from "../../components/Button";
+
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
+
+import { motion } from "framer-motion";
+
+import axios from "axios";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { api } from "../../services/api";
+
+export const Home = ({ userData, setUserData }) => {
+  const schema = yup.object().shape({
+    email: yup.string().required("Campo obrigatório!!"),
+    password: yup.string().required("Campo obrigatório!"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const handleForm = (user) => {
+    console.log(user);
+    api
+      .post("/sessions", { ...user })
+      .then((res) => {
+        console.log(res);
+        // window.localStorage.clear();
+        window.localStorage.setItem("authToken", res.data.token);
+
+        window.localStorage.getItem("authToken" && history.push("/userhome"));
+        setUserData([...userData, res]);
+      })
+      .catch((err) => console.log(err));
+  };
+
   let history = useHistory();
 
   const handleClick = () => {
-    history.push("/sign");
+    history.push("/signup");
   };
 
-  const handleLogin = () => {
-    history.push("/userhome");
-  };
+  // const handleLogin = () => {
+  //   history.push("/userhome");
+  // };
 
   return (
     <motion.div
@@ -23,15 +61,27 @@ export const Home = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 1 }}
     >
-      <div>
+      <div className="centered">
         <h1>KenzieHub</h1>
-        <Input placeholder="login" textTransform={false} />
-        <Input placeholder="senha" type="password" textTransform={false} />
-        <Btn
-          clickFunction={handleLogin}
-          onClick={() => handleLogin}
-          placeholder="logar"
-        />
+        <form onSubmit={handleSubmit(handleForm)}>
+          <input
+            className="field"
+            placeholder="login"
+            type="text"
+            textTransform={false}
+            {...register("email")}
+          />
+          <input
+            className="field"
+            placeholder="senha"
+            type="password"
+            textTransform={false}
+            {...register("password")}
+          />
+          <button placeholder="logar" type="submit">
+            logar
+          </button>
+        </form>
         <span className="textContainer">
           <p>Não possui cadastro? </p>
           <Btn
