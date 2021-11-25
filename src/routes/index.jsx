@@ -5,7 +5,9 @@ import { SignUp } from "../pages/SignUp";
 import { UserHome } from "../pages/UserHome";
 
 export const Routes = () => {
-  const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState(
+    JSON.parse(localStorage.getItem("userInfo")) || []
+  );
   return (
     <>
       <Switch>

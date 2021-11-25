@@ -1,18 +1,19 @@
 import "./styles.css";
 
-import { Input } from "../../components/Input";
 import { Btn } from "../../components/Button";
 
-import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 import { motion } from "framer-motion";
 
-import axios from "axios";
+// import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { api } from "../../services/api";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import { useState } from "react/cjs/react.development";
 
 export const Home = ({ userData, setUserData }) => {
   const schema = yup.object().shape({
@@ -29,30 +30,38 @@ export const Home = ({ userData, setUserData }) => {
     resolver: yupResolver(schema),
   });
 
+  setTimeout(() => {
+    window.localStorage.clear();
+  }, 300000);
+
   const handleForm = (user) => {
     console.log(user);
     api
       .post("/sessions", { ...user })
       .then((res) => {
-        console.log(res);
-        // window.localStorage.clear();
-        window.localStorage.setItem("authToken", res.data.token);
-
-        window.localStorage.getItem("authToken" && history.push("/userhome"));
-        setUserData([...userData, res]);
+        setUserData([res.data.user]);
+        localStorage.setItem("authToken", JSON.stringify(res.data.token));
+        localStorage.setItem("userInfo", JSON.stringify(res.data.user));
+        localStorage.setItem("techs", JSON.stringify(res.data.user.techs));
+        toast("Que bom você por aqui!", {
+          icon: "👏",
+        });
       })
       .catch((err) => console.log(err));
   };
+
+  useEffect(() => {
+    console.log(userData);
+    if (localStorage.getItem("authToken")) {
+      history.push("/userhome");
+    }
+  }, [userData]);
 
   let history = useHistory();
 
   const handleClick = () => {
     history.push("/signup");
   };
-
-  // const handleLogin = () => {
-  //   history.push("/userhome");
-  // };
 
   return (
     <motion.div
