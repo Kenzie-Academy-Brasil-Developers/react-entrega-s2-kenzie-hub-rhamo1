@@ -1,14 +1,15 @@
 import { motion } from "framer-motion";
 import { useHistory } from "react-router";
 import { Btn } from "../../components/Button";
-import { Input } from "../../components/Input";
+// import { Input } from "../../components/Input";
 import { api } from "../../services/api";
 import "./styles.css";
 
-import axios from "axios";
+// import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import toast from "react-hot-toast";
 
 export const SignUp = () => {
   let history = useHistory();
@@ -21,6 +22,7 @@ export const SignUp = () => {
     contact: yup.string().required("Campo obrigatório!"),
     course_module: yup.string().required("Campo obrigatório!"),
   });
+
   const {
     register,
     handleSubmit,
@@ -37,13 +39,16 @@ export const SignUp = () => {
   const handleForm = (user) => {
     console.log(user);
     api
-      .post("/users")
+      .post("/users", user)
       .then((res) => {
         console.log(res);
+        toast.success("sucesso!");
       })
       .catch((err) => {
+        setError(err.message);
         console.log(err);
         console.log(errors);
+        toast.error(`Algo de errado não está certo... ${err}`);
       });
   };
 
@@ -72,6 +77,7 @@ export const SignUp = () => {
           placeholder="módulo: 1 ~ 4"
           {...register("course_module")}
         />
+        {errors.course_module && errors.course_module.message}
         <input name="password" placeholder="senha " {...register("password")} />
         {errors.password && errors.password.message}
         <input placeholder="confirmar senha" />

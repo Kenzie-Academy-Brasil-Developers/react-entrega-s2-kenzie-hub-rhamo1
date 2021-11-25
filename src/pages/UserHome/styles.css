@@ -4,6 +4,13 @@
   flex-direction: row;
 }
 
+.mainContainer {
+  display: flex;
+  flex: 1;
+  /* height: 100vh; */
+  /* background-color: red; */
+}
+
 .box {
   border: 3px solid;
   padding: 0.25em 0.5em;
@@ -12,22 +19,34 @@
 }
 .techs {
   display: flex;
+
   flex: 2;
   flex-direction: column;
 }
 
 .tech--div {
   display: flex;
+  flex-direction: column;
   max-width: 500px;
 
+  height: 400px;
+  margin: 10px;
+
   justify-content: space-around;
+  align-items: center;
 }
 
 .userProfile {
   max-height: 600px;
   display: flex;
+  flex-direction: column;
   flex: 1;
 
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
+}
+
+.counter {
+  font-size: 10px;
 }
