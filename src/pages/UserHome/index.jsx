@@ -7,6 +7,10 @@ import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useState } from "react/cjs/react.development";
 import { useEffect } from "react";
+import { api } from "../../services/api";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
 
 export const UserHome = () => {
   const history = useHistory();
@@ -45,6 +49,44 @@ export const UserHome = () => {
     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
   }, [counter]);
 
+  ///////
+
+  const token = JSON.parse(localStorage.getItem("authToken"));
+
+  const schema = yup.object().shape({
+    title: yup.string().required("Campo obrigatório!!"),
+    status: yup.string().required("Campo obrigatório!"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const addTech = (tech) => {
+    console.log(tech);
+    api
+      .post("/users/techs", tech, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        console.log(res);
+        toast.success("sucesso!");
+      })
+      .catch((err) => {
+        setError(err.message);
+        console.log(err);
+        console.log(errors);
+        toast.error(`Algo de errado não está certo... ${err}`);
+      });
+  };
+
+  console.log(token);
+
   return (
     <>
       {JSON.parse(localStorage.getItem("authToken")) ? (
@@ -58,14 +100,31 @@ export const UserHome = () => {
           <div className="mainContainer">
             <div className="techs">
               <div className="tech--div box">
-                <h2>Minhas tecnologias</h2>
+                <h2>Minhas tecnologias:</h2>
 
                 <>
-                  {techs.map(({ title }, key) => (
-                    <p key={key}>{title}</p>
+                  {techs.map(({ title, status }, key) => (
+                    <ul>
+                      <li key={key}>
+                        <h3>Tech: {title}</h3>
+                        <p>Status: {status}</p>
+                      </li>
+                    </ul>
                   ))}
                 </>
-                {/* <Btn placeholder="+" /> */}
+                <form onSubmit={handleSubmit(addTech)}>
+                  <input
+                    placeholder="title"
+                    type="text"
+                    {...register("title")}
+                  />
+                  <input
+                    placeholder="status"
+                    type="text"
+                    {...register("status")}
+                  />
+                  <Btn placeholder="+" />
+                </form>
 
                 {/* falta adicionar novas techs */}
               </div>
@@ -92,7 +151,7 @@ export const UserHome = () => {
                 clickFunction={copyMail}
               />
               <Btn placeholder="Sair" onClick={logout} clickFunction={logout} />
-              <p className="counter">Fim da sessão: {counter} segundos</p>
+              {/* <p className="counter">Fim da sessão: {counter} segundos</p> */}
             </div>
           </div>
         </motion.div>

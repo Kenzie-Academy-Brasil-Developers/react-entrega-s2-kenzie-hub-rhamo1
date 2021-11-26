@@ -13,7 +13,6 @@ import * as yup from "yup";
 import { api } from "../../services/api";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import { useState } from "react/cjs/react.development";
 
 export const Home = ({ userData, setUserData }) => {
   const schema = yup.object().shape({
@@ -30,9 +29,9 @@ export const Home = ({ userData, setUserData }) => {
     resolver: yupResolver(schema),
   });
 
-  setTimeout(() => {
-    window.localStorage.clear();
-  }, 300000);
+  // setTimeout(() => {
+  //   window.localStorage.clear();
+  // }, 300000);
 
   const handleForm = (user) => {
     console.log(user);
