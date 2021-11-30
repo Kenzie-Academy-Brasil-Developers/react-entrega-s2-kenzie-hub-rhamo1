@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useState } from "react/cjs/react.development";
+import { useState } from "react";
 import { useEffect } from "react";
 import { api } from "../../services/api";
 import { yupResolver } from "@hookform/resolvers/yup";

@@ -6,12 +6,10 @@ import { useHistory } from "react-router-dom";
 
 import { motion } from "framer-motion";
 
-// import axios from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { api } from "../../services/api";
-import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 export const Home = ({ userData, setUserData }) => {
@@ -29,10 +27,6 @@ export const Home = ({ userData, setUserData }) => {
     resolver: yupResolver(schema),
   });
 
-  // setTimeout(() => {
-  //   window.localStorage.clear();
-  // }, 300000);
-
   const handleForm = (user) => {
     console.log(user);
     api
@@ -45,16 +39,12 @@ export const Home = ({ userData, setUserData }) => {
         toast("Que bom você por aqui!", {
           icon: "👏",
         });
+        history.push("/userhome");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        toast.error("Credenciais incorretas!");
+      });
   };
-
-  useEffect(() => {
-    console.log(userData);
-    if (localStorage.getItem("authToken")) {
-      history.push("/userhome");
-    }
-  }, [userData]);
 
   let history = useHistory();
 
