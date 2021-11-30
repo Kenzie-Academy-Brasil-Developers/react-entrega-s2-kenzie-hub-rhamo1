@@ -43,6 +43,7 @@ export const SignUp = () => {
       .then((res) => {
         console.log(res);
         toast.success("sucesso!");
+        history.push("/");
       })
       .catch((err) => {
         setError(err.message);
@@ -78,9 +79,14 @@ export const SignUp = () => {
           {...register("course_module")}
         />
         {errors.course_module && errors.course_module.message}
-        <input name="password" placeholder="senha " {...register("password")} />
+        <input
+          type="password"
+          name="password"
+          placeholder="senha "
+          {...register("password")}
+        />
         {errors.password && errors.password.message}
-        <input placeholder="confirmar senha" />
+        <input type="password" placeholder="confirmar senha" />
         <button placeholder="cadastrar" type="submit">
           cadastrar{" "}
         </button>
