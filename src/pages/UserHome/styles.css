@@ -18,6 +18,17 @@
   margin: 0;
 }
 
+.techCard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  /* max-width: 400px; */
+}
+
+.btnTech {
+}
+
 .box {
   border: 3px solid;
   padding: 0.25em 0.5em;

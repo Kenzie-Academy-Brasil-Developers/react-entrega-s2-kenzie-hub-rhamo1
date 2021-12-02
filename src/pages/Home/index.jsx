@@ -28,7 +28,6 @@ export const Home = ({ userData, setUserData }) => {
   });
 
   const handleForm = (user) => {
-    console.log(user);
     api
       .post("/sessions", { ...user })
       .then((res) => {
