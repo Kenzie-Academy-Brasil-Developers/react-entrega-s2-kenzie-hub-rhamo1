@@ -11,6 +11,7 @@ import { api } from "../../services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import axios from "axios";
 
 export const UserHome = () => {
   const history = useHistory();
@@ -22,7 +23,8 @@ export const UserHome = () => {
   const [techs, setTechs] = useState(
     JSON.parse(localStorage.getItem("techs")) || []
   );
-  const [array, setArray] = useState([]);
+  const [userTechs, setUserTechs] = useState([]);
+  const [user, setUser] = useState({});
 
   const logout = () => {
     window.localStorage.clear();
@@ -42,13 +44,6 @@ export const UserHome = () => {
     toast.success("email copiado para a àrea de transferência");
   };
 
-  const [counter, setCounter] = useState(300);
-
-  useEffect(() => {
-    setArray(Object.values(techs));
-    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
-  }, [counter]);
-
   ///////
 
   const token = JSON.parse(localStorage.getItem("authToken"));
@@ -66,6 +61,17 @@ export const UserHome = () => {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
+  useEffect(() => {
+    axios
+      .get("https://kenziehub.herokuapp.com/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        setUserTechs(response.data.techs);
+      })
+      .catch((e) => console.log(e));
+  }, [userTechs]);
 
   const addTech = (tech) => {
     console.log(tech);
@@ -85,7 +91,7 @@ export const UserHome = () => {
       });
   };
 
-  console.log(token);
+  // console.log(token);
 
   return (
     <>
@@ -103,10 +109,10 @@ export const UserHome = () => {
                 <h2>Minhas tecnologias:</h2>
 
                 <>
-                  {techs.map(({ title, status }, key) => (
+                  {userTechs.map(({ title, status }, key) => (
                     <ul>
                       <li key={key}>
-                        <h3>Tech: {title}</h3>
+                        <h4>Tech: {title}</h4>
                         <p>Status: {status}</p>
                       </li>
                     </ul>
@@ -118,11 +124,20 @@ export const UserHome = () => {
                     type="text"
                     {...register("title")}
                   />
+                  <p className="error">
+                    {errors.title && errors.title.message}
+                  </p>
+
                   <input
                     placeholder="status"
                     type="text"
                     {...register("status")}
                   />
+
+                  <p className="error">
+                    {errors.status && errors.status.message}
+                  </p>
+
                   <Btn placeholder="+" />
                 </form>
 
@@ -130,9 +145,9 @@ export const UserHome = () => {
               </div>
             </div>
             <div className="userProfile box">
-              <h2>{userData.name}</h2>
+              <h3>{userData.name}</h3>
 
-              <h3>Sobre:</h3>
+              <h4>Sobre:</h4>
               <p>{userData.bio}</p>
               <p></p>
 
@@ -141,6 +156,7 @@ export const UserHome = () => {
                 {userData.course_module}
               </p>
               <Btn
+                primaryColor="false"
                 placeholder="ligar agora"
                 onClick={copyPhone}
                 clickFunction={copyPhone}

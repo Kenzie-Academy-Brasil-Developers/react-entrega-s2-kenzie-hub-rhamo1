@@ -9,6 +9,13 @@
   flex: 1;
   /* height: 100vh; */
   /* background-color: red; */
+  align-items: center;
+}
+
+.error {
+  font-size: 10px;
+  padding: 0;
+  margin: 0;
 }
 
 .box {
@@ -44,11 +51,15 @@ form input {
   flex-direction: column;
   max-width: 500px;
 
-  height: 400px;
+  height: 100%;
   margin: 10px;
 
   justify-content: space-around;
   align-items: center;
+}
+
+p {
+  padding: 5px;
 }
 
 .userProfile {
@@ -65,3 +76,10 @@ form input {
 .counter {
   font-size: 10px;
 }
+
+@media (max-width: 700px) {
+  .mainContainer {
+    flex-direction: column;
+    width: 100vw;
+  }
+} ;
