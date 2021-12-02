@@ -80,18 +80,23 @@ export const UserHome = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        console.log(res);
         toast.success("sucesso!");
       })
       .catch((err) => {
         setError(err.message);
-        console.log(err);
-        console.log(errors);
-        toast.error(`Algo de errado não está certo... ${err}`);
+
+        toast.error(`Essa tech já existe!`);
       });
   };
 
-  // console.log(token);
+  const deleteTech = (techId) => {
+    axios.delete(`https://kenziehub.herokuapp.com/users/techs/${techId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    setTechs(userTechs.filter((tech) => tech.id !== techId));
+    console.log(userTechs);
+  };
 
   return (
     <>
@@ -109,11 +114,16 @@ export const UserHome = () => {
                 <h2>Minhas tecnologias:</h2>
 
                 <>
-                  {userTechs.map(({ title, status }, key) => (
+                  {userTechs.map(({ title, status, id }, key) => (
                     <ul>
-                      <li key={key}>
-                        <h4>Tech: {title}</h4>
-                        <p>Status: {status}</p>
+                      <li key={key} className="techCard">
+                        <p>
+                          {title} ({status})
+                        </p>
+
+                        <button className="box" onClick={() => deleteTech(id)}>
+                          -
+                        </button>
                       </li>
                     </ul>
                   ))}
